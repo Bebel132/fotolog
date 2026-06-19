@@ -7,10 +7,12 @@ from photo import Photo
 
 class Catalog:
 
-    def __init__(self, photo: Photo):
+    def __init__(self, photo: Photo, commands: list = []):
         self._index = AVLTree(photo)
         self.sec_index = dict()
         self.sec_index[photo._id] = photo
+        self.running = True
+        self.commands = commands
 
     def add(self, photo: Photo):
         self._index.insert(photo)
@@ -55,4 +57,37 @@ class Catalog:
 
     def __str__(self):
         return self._index.in_order().__str__()
+    
+    def help(self):
+        for command in self.commands:
+            if command['option']:
+                print(f"{command['command']} {command['option']}")
+            else:
+                print(command['command'])
+
+    def quit(self):
+        self.running = False
+    
+    def registerCommands(self):
+        self.commands = [
+            {'command': ':add', 'option': '<id> <ts> <path> [rating]', 'function': None, 'input_type': str},
+            {'command': ':import', 'option': '<manifest.json>', 'function': None, 'input_type': str},
+            {'command': ':range', 'option': '<ts1> <ts2>', 'function': None, 'input_type': str},
+            {'command': ':nearest', 'option': '<ts>', 'function': None, 'input_type': str},
+            {'command': ':next', 'option': ' <id>', 'function': None, 'input_type': int},
+            {'command': ':prev', 'option': ' <id>', 'function': None, 'input_type': int},
+            {'command': ':get', 'option': '<id>', 'function': None, 'input_type': int},
+            {'command': ':tag', 'option': '<id> <tag>', 'function': None, 'input_type': str},
+            {'command': ':rate', 'option': '<id> <0..5>', 'function': None, 'input_type': str},
+            {'command': ':find-tag', 'option': '<tag>', 'function': None, 'input_type': str},
+            {'command': ':remove', 'option': '<id>', 'function': None, 'input_type': int},
+            {'command': ':remove-range', 'option': '<ts1> <ts2>', 'function': None, 'input_type': str},
+            {'command': ':stats', 'option': None, 'function': None, 'input_type': None},
+            {'command': ':list', 'option': None, 'function': None, 'input_type': None},
+            {'command': ':tree', 'option': None, 'function': None, 'input_type': None},
+            {'command': ':save', 'option': '<f>', 'function': None, 'input_type': str},
+            {'command': ':load', 'option': '<f>', 'function': None, 'input_type': str},
+            {'command': ':help', 'option': None, 'function': self.help, 'input_type': None},
+            {'command': ':quit', 'option': None, 'function': self.quit, 'input_type': None},
+        ]
 
