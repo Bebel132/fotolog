@@ -4,7 +4,7 @@ class Photo:
         self._id = id
         self._timestamp = timestamp
         self._path = path
-        self._tags = tags if tags is not None else []
+        self._tags = tags if tags is not None else []   
         self._rating = rating
 
     @property
@@ -73,4 +73,4 @@ class Photo:
         return self.__str__()
 
     def __str__(self):
-        return f'{self._timestamp} {self._path}'
+        return f'timestamp: {self._timestamp}, path: {self._path}'

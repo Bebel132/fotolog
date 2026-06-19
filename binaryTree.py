@@ -80,6 +80,13 @@ class BinaryNode:
             if self._data < other._data:
                 result = True
         return result
+    
+    def __gt__(self, other):
+        result = False
+        if isinstance(other, BinaryNode):
+            if self._data > other._data:
+                result = True
+        return result
 
 
 class BinaryTree(TreeADT):
@@ -145,7 +152,7 @@ class BinaryTree(TreeADT):
             else:
                 return self.__insert_children(root.right_node(), node)  # sub-árvore direta
 
-    def search(self, value: int):
+    def search(self, value):
         node = BinaryNode(value)
         if not self.empty():
             return self.__search_children(self._root, node)
@@ -178,24 +185,38 @@ class BinaryTree(TreeADT):
 
     def successor(self, node):
         belongs, n = self.search_iterative(node.data())
-        if belongs:
-            if n.right_node():
-                return self.minimum(n.right_node())
-            else:
-                return None
-        else:
+
+        if not belongs:
             return None
+
+        if n.right_node():
+            return self.minimum(n.right_node())
+
+        parent = n.parent_node()
+
+        while parent and n == parent.right_node():
+            n = parent
+            parent = parent.parent_node()
+
+        return parent
 
     def predecessor(self, node):
         belongs, n = self.search_iterative(node.data())
-        if belongs:
-            if n.left_node():
-                return self.maximum(n.left_node())
-            else:
-                return None
-        else:
+
+        if not belongs:
             return None
 
+        if n.left_node():
+            return self.maximum(n.left_node())
+
+        parent = n.parent_node()
+
+        while parent and n == parent.left_node():
+            n = parent
+            parent = parent.parent_node()
+
+        return parent
+    
     def delete(self, value):
         belongs, z = self.search(value)
         if belongs:
