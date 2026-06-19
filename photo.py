@@ -73,4 +73,10 @@ class Photo:
         return self.__str__()
 
     def __str__(self):
-        return f'timestamp: {self._timestamp}, path: {self._path}'
+        return self.format()
+        
+    def format(self, type = 'short'):
+        if type == 'short':
+            return f'[{self._timestamp}|{self._id}]'
+        elif type == 'long':
+            return f'[{self._timestamp}|{self._id}] {self._path} Tags: {self._tags} Rating: {self._rating}'

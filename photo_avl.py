@@ -3,8 +3,8 @@ from photo import Photo
 
 
 class PhotoAVL(AVLTree):
-    # range(ts1, ts2) — busca com poda de sub-árvores
-    # nearest(ts) — descida mantendo melhor candidato
+    # 🆗 range(ts1, ts2) — busca com poda de sub-árvores
+    # 🆗 nearest(ts) — descida mantendo melhor candidato
     # Busca por chave composta (ts, id)
     def __init__(self):
         super().__init__()

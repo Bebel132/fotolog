@@ -27,8 +27,9 @@ def run():
                 if len(user_input) == 1:
                     try : 
                         command["function"]()
-                    except:
-                        print("Comando inválido. Digite ':help' para ver os comandos disponíveis.")
+                    except TypeError as e:
+                        print(f"Erro: {e}. Digite ':help' para ver os comandos disponíveis.")
+                        # print("Comando inválido. Digite ':help' para ver os comandos disponíveis.")
 
                 if len(user_input) == 2:
                     command["function"](user_input[1])

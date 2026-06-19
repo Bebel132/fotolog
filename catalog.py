@@ -8,16 +8,22 @@ from photo_avl import PhotoAVL
 
 class Catalog(PhotoAVL):
     # 🆗 add(foto) — insere na AVL + no dict
-    # 🆗 remove(id) — remove da AVL + do dict
-    # 🆗 get_by_id(id) — acesso O(1) pelo dict
+    # import(path) - importa várias fotos de um JSON; registros inválidos são ignorados e o total é reportado.
     # 🆗 range(ts1, ts2) — delega para AVL
     # 🆗 nearest(ts) — delega para AVL
     # 🆗 next_of(id) / prev_of(id) — delega successor/predecessor da AVL
-    # remove_range(ts1, ts2) — remove lote da AVL + dict
+    # 🆗 get_by_id(id) — acesso O(1) pelo dict
     # 🆗 tag(id, t) / rate(id, r) — edita via dict
     # find_by_tag(tag) — in-order filtrando por tag
-    # stats() — total, mais antiga, mais recente, rating médio e mediano
+    # 🆗 remove(id) — remove da AVL + do dict
+    # 🆗 remove_range(ts1, ts2) — remove lote da AVL + dict
+    # 🆗 stats() — total, mais antiga, mais recente, rating médio e mediano
+    # 🆗 list() — lista todas as fotos ordenadas por timestamp
+    # 🆗 tree() — imprime a estrutura da AVL
     # save(path) / load(path) — persistência JSON
+    # 🆗 help() — lista os comandos disponíveis
+    # 🆗 quit() — encerra o programa
+    
     def __init__(self, commands: list = []):
         super().__init__()
         self.sec_index = dict()
@@ -41,7 +47,6 @@ class Catalog(PhotoAVL):
         self.sec_index.pop(id)
 
     def get_by_id(self, id):
-        print(self.sec_index)
         result = self.sec_index.get(id)
         if not result:
             raise ValueError(f"Photo with id {id} not found")
@@ -53,38 +58,26 @@ class Catalog(PhotoAVL):
             raise ValueError("Nenhuma foto encontrada.")
         
         for photo in result:
-            print(photo)
-
-    def __get_by_id_in_tree(self, id):
-        """
-        Procura por uma foto pelo seu identificador único e recupera a representação
-        dentro da árvore de indexação
-
-        Args:
-            id: Identificador único
-
-        Returns:
-            Nó que representa a foto na árvode de indexação
-        """
-        p: Photo = self.get_by_id(id)  # aqui eu tenho uma foto
-        return self.search(p)[1]  # aqui eu tenho a foto na árvore
+            print(photo.format('long'))
 
     def next_of(self, id):
         photo = self.sec_index.get(int(id))
         result = self.successor(photo)
 
         if result:
-            print(result.data())
+            print(result.data().format('long'))
 
     def prev_of(self, id):
         photo = self.sec_index.get(int(id))
         result = self.predecessor(photo)
 
         if result:
-            print(result.data())
+            print(result.data().format('long'))
 
     def remove_range(self, ts1, ts2):
-        ...
+        result = super().range(int(ts1), int(ts2))
+        for photo in result:
+            self.remove(photo.id)
         
     def tag(self, id, t):
         id = int(id)
@@ -105,6 +98,12 @@ class Catalog(PhotoAVL):
         ...
 
     def stats(self):
+        result = super().in_order()
+        print(f"Total de fotos: {len(result)}")
+        print(f"Foto mais antiga: {result[0].data().format('long')}")
+        ratings = [photo.rating for photo in result if photo.rating is not None]
+        print(f"Rating médio: {sum(ratings) / len(ratings) if ratings else 'N/A'}")
+        print(f"Rating mediano: {ratings[len(ratings) // 2] if ratings else 'N/A'}")
         ...
 
     def save(self, path):
@@ -113,12 +112,11 @@ class Catalog(PhotoAVL):
     def load(self, path):
         ...
 
-    def __repr__(self):
-        return self.__str__()
+    def list(self):
+        result = super().in_order() 
+        for node in result:
+            print(node.data().format('long'))
 
-    # def __str__(self):
-    #     return self._index.in_order().__str__()
-    
     def help(self):
         for command in self.commands:
             if command['option']:
@@ -146,10 +144,10 @@ class Catalog(PhotoAVL):
             {'command': ':rate', 'option': '<id> <0..5>', 'function': None},
             {'command': ':find-tag', 'option': '<tag>', 'function': None},
             {'command': ':remove', 'option': '<id>', 'function': self.remove},
-            {'command': ':remove-range', 'option': '<ts1> <ts2>', 'function': None},
-            {'command': ':stats', 'option': None, 'function': None},
-            {'command': ':list', 'option': None, 'function': None},
-            {'command': ':tree', 'option': None, 'function': None},
+            {'command': ':remove-range', 'option': '<ts1> <ts2>', 'function': self.remove_range},
+            {'command': ':stats', 'option': None, 'function': self.stats},
+            {'command': ':list', 'option': None, 'function': self.list},
+            {'command': ':tree', 'option': None, 'function': super().print_tree},
             {'command': ':save', 'option': '<f>', 'function': None},
             {'command': ':load', 'option': '<f>', 'function': None},
             {'command': ':help', 'option': None, 'function': self.help},

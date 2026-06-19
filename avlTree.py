@@ -130,6 +130,7 @@ class AVLTree(BinaryTree):
     def delete(self, value):
         if not self.empty():
             self._root = self._delete_node(self._root, value)
+            self._qtd_nodes -= 1
 
     def _delete_node(self, root, value):
         if not root:
@@ -178,3 +179,25 @@ class AVLTree(BinaryTree):
 
         if ts < ts2:
             self._range_recursive(node.right_node(), ts1, ts2, result)
+
+    def print_tree(self):
+        self.__print_tree(self._root, "", True)
+
+    def __print_tree(self, node, prefix="", is_last=True):
+        if node is None:
+            return
+
+        print(prefix + ("└── " if is_last else "├── ") + str(node.data()))
+
+        children = []
+
+        if node.left_node():
+            children.append(node.left_node())
+
+        if node.right_node():
+            children.append(node.right_node())
+
+        for i, child in enumerate(children):
+            last_child = (i == len(children) - 1)
+
+            self.__print_tree(child, prefix + ("    " if is_last else "│   "), last_child)
