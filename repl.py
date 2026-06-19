@@ -18,7 +18,7 @@ def run():
 
         if not user_input:
             continue
-
+        
         aux = None
         for command in fotolog.commands:
             if user_input[0] == command["command"]:
@@ -34,7 +34,7 @@ def run():
                     command["function"](user_input[1])
                         
                 if len(user_input) >= 3:
-                    command["function"](user_input[1:])
+                    command["function"](*user_input[1:])
 
         if not aux:
             if user_input[0][0] != ':':

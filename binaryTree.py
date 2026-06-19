@@ -216,7 +216,7 @@ class BinaryTree(TreeADT):
             parent = parent.parent_node()
 
         return parent
-    
+        
     def delete(self, value):
         belongs, z = self.search(value)
         if belongs:

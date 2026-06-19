@@ -10,10 +10,29 @@ class PhotoAVL(AVLTree):
         super().__init__()
 
     def range(self, ts1, ts2):
-        ...
+        result = []
+        self._range_recursive(self._root, ts1, ts2, result)
+        return result
 
     def nearest(self, ts):
-        ...
+        ts = int(ts)
+        current = self._root
+        best = None
+
+        while current:
+            photo = current.data()
+
+            if best is None or abs(photo.timestamp - ts) < abs(best.timestamp - ts):
+                best = photo
+
+            if ts < photo.timestamp:
+                current = current.left_node()
+            elif ts > photo.timestamp:
+                current = current.right_node()
+            else:
+                return photo
+
+        print(best)
 
     def find_by_key(self, ts, id):
         ...

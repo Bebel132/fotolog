@@ -164,3 +164,17 @@ class AVLTree(BinaryTree):
         # Balanceia a árvore
         return self._balance_tree(root)
 
+    def _range_recursive(self, node, ts1, ts2, result):
+        if node is None:
+            return
+
+        ts = node.data().timestamp
+
+        if ts > ts1:
+            self._range_recursive(node.left_node(), ts1, ts2, result)
+
+        if ts1 <= ts <= ts2:
+            result.append(node.data())
+
+        if ts < ts2:
+            self._range_recursive(node.right_node(), ts1, ts2, result)

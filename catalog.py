@@ -10,8 +10,8 @@ class Catalog(PhotoAVL):
     # 🆗 add(foto) — insere na AVL + no dict
     # 🆗 remove(id) — remove da AVL + do dict
     # 🆗 get_by_id(id) — acesso O(1) pelo dict
-    # range(ts1, ts2) — delega para AVL
-    # nearest(ts) — delega para AVL
+    # 🆗 range(ts1, ts2) — delega para AVL
+    # 🆗 nearest(ts) — delega para AVL
     # 🆗 next_of(id) / prev_of(id) — delega successor/predecessor da AVL
     # remove_range(ts1, ts2) — remove lote da AVL + dict
     # 🆗 tag(id, t) / rate(id, r) — edita via dict
@@ -48,7 +48,12 @@ class Catalog(PhotoAVL):
         return result
 
     def range(self, ts1, ts2):
-        ...
+        result = super().range(int(ts1), int(ts2))
+        if not result:
+            raise ValueError("Nenhuma foto encontrada.")
+        
+        for photo in result:
+            print(photo)
 
     def __get_by_id_in_tree(self, id):
         """
@@ -132,8 +137,8 @@ class Catalog(PhotoAVL):
         self.commands = [
             {'command': ':add', 'option': '<ts> <path> [rating]', 'function': self.add},
             {'command': ':import', 'option': '<manifest.json>', 'function': None},
-            {'command': ':range', 'option': '<ts1> <ts2>', 'function': None},
-            {'command': ':nearest', 'option': '<ts>', 'function': None},
+            {'command': ':range', 'option': '<ts1> <ts2>', 'function': self.range},
+            {'command': ':nearest', 'option': '<ts>', 'function': super().nearest},
             {'command': ':next', 'option': ' <id>', 'function': self.next_of},
             {'command': ':prev', 'option': ' <id>', 'function': self.prev_of},
             {'command': ':get', 'option': '<id>', 'function': None},
