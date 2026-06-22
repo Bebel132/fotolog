@@ -1,8 +1,8 @@
 class Photo:
 
-    def __init__(self, id, timestamp, path, tags: list = None, rating: int = None):
+    def __init__(self, id, ts, path, tags: list = None, rating: int = None):
         self._id = id
-        self._timestamp = timestamp
+        self._ts = ts
         self._path = path
         self._tags = tags if tags is not None else []   
         self._rating = rating
@@ -16,12 +16,12 @@ class Photo:
         self._id = value
 
     @property
-    def timestamp(self):
-        return self._timestamp
+    def ts(self):
+        return self._ts
 
-    @timestamp.setter
-    def timestamp(self, value):
-        self._timestamp = value
+    @ts.setter
+    def ts(self, value):
+        self._ts = value
 
     @property
     def path(self):
@@ -54,19 +54,19 @@ class Photo:
     def __le__(self, other):
         result = False
         if isinstance(other, Photo):
-            result = self._timestamp <= other._timestamp
+            result = self._ts <= other._ts
         return result
 
     def __gt__(self, other):
         result = False
         if isinstance(other, Photo):
-            result = self._timestamp > other._timestamp
+            result = self._ts > other._ts
         return result
 
     def __eq__(self, other):
         result = False
         if isinstance(other, Photo):
-            result = self._timestamp == other._timestamp and self._id == other._id
+            result = self._ts == other._ts and self._id == other._id
         return result
 
     def __repr__(self):
@@ -77,6 +77,6 @@ class Photo:
         
     def format(self, type = 'short'):
         if type == 'short':
-            return f'[{self._timestamp}|{self._id}]'
+            return f'[{self._ts}|{self._id}]'
         elif type == 'long':
-            return f'[{self._timestamp}|{self._id}] {self._path} Tags: {self._tags} Rating: {self._rating}'
+            return f'[{self._ts}|{self._id}] {self._path} Tags: {self._tags} Rating: {self._rating}'

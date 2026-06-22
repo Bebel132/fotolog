@@ -169,7 +169,7 @@ class AVLTree(BinaryTree):
         if node is None:
             return
 
-        ts = node.data().timestamp
+        ts = node.data().ts
 
         if ts > ts1:
             self._range_recursive(node.left_node(), ts1, ts2, result)

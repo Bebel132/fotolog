@@ -1,4 +1,4 @@
 [
-    {"id": 1, "ts": 1704067200, "path": "/p/1.jpg", "tags": ["praia"], "rating":5},
-    {"id": 2, "ts": "2024-03-22 16:05:30", "path": "/p/2.jpg"}
+  {"id": 1, "ts": 3000, "path": "a.jpg"},
+  {"id": 2, "ts": 4000, "path": "b.jpg"}
 ]
