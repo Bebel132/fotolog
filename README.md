@@ -56,46 +56,27 @@ python -m unittest tests.py -v
 
 ## Comandos disponíveis
 
+
 | Comando                     | Descrição                                            |
-
 | --------------------------- | ---------------------------------------------------- |
-
 | `:add <ts> <path> [rating]` | Adiciona uma foto                                    |
-
 | `:import <manifest.json>`   | Importa fotos de um manifesto JSON                   |
-
 | `:range <ts1> <ts2>`        | Lista fotos entre dois timestamps                    |
-
 | `:nearest <ts>`             | Busca a foto com timestamp mais próximo              |
-
 | `:next <id>`                | Obtém o sucessor da foto                             |
-
 | `:prev <id>`                | Obtém o predecessor da foto                          |
-
 | `:get <id>`                 | Busca foto pelo ID                                   |
-
 | `:tag <id> <tag>`           | Adiciona uma tag                                     |
-
 | `:rate <id> <1..5>`         | Atualiza a avaliação                                 |
-
 | `:find-tag <tag>`           | Busca fotos por tag                                  |
-
 | `:remove <id>`              | Remove uma foto                                      |
-
 | `:remove-range <ts1> <ts2>` | Remove fotos em um intervalo                         |
-
 | `:stats`                    | Exibe estatísticas do catálogo                       |
-
 | `:list`                     | Lista todas as fotos em ordem crescente de timestamp |
-
 | `:tree`                     | Exibe a árvore AVL                                   |
-
 | `:save <arquivo>`           | Salva catálogo em JSON                               |
-
 | `:load <arquivo>`           | Carrega catálogo de JSON                             |
-
 | `:help`                     | Exibe ajuda                                          |
-
 | `:quit`                     | Encerra o programa                                   |
 
 ---
@@ -309,23 +290,14 @@ O sistema utiliza uma interface REPL simples baseada em terminal, sem validaçã
 
 
 | Operação            | Complexidade |
-
 | ------------------- | ------------ |
-
 | Inserção            | O(log n)     |
-
 | Remoção             | O(log n)     |
-
 | Busca por timestamp | O(log n)     |
-
 | Busca por ID        | O(1)         |
-
 | Range               | O(log n + k) |
-
 | Nearest             | O(log n)     |
-
 | Listagem ordenada   | O(n)         |
-
 | Busca por tag       | O(n)         |
 
 
