@@ -1,6 +1,8 @@
 
 # TODO é necessário implementar um gerador de id's para cada foto
 # a restrição é que o id tem que ser único
+import json
+
 from avlTree import AVLTree
 from photo import Photo
 from photo_avl import PhotoAVL
@@ -46,10 +48,16 @@ class Catalog(PhotoAVL):
         self.delete(self.get_by_id(id))
         self.sec_index.pop(id)
 
-    def get_by_id(self, id):
+    def get_by_id(self, id, print_result=False):
+        id = int(id)
         result = self.sec_index.get(id)
+
         if not result:
             raise ValueError(f"Photo with id {id} not found")
+        
+        if print_result:
+            print(result.format('long'))
+
         return result
 
     def range(self, ts1, ts2):
@@ -88,14 +96,22 @@ class Catalog(PhotoAVL):
     def rate(self, id, r):
         id = int(id)
         r = int(r)
-        if r < 0 or r > 5:
-            raise ValueError("Rating deve ser um inteiro entre 0 e 5")
+        if r < 1 or r > 5:
+            print("Rating deve ser um inteiro entre 1 e 5")
+            return
         photo = self.sec_index.get(id)
         if photo:
             photo.rating = r
 
     def find_by_tag(self, tag):
-        ...
+        result = super().in_order() 
+        result = [node.data() for node in result if tag in node.data().tags]
+        if not result:
+            print("Nenhuma foto encontrada.")
+            return
+        
+        for photo in result:
+            print(photo.format('long'))
 
     def stats(self):
         result = super().in_order()
@@ -107,10 +123,60 @@ class Catalog(PhotoAVL):
         ...
 
     def save(self, path):
-        ...
+        path += '.json' if not path.endswith('.json') else ''
+
+        json_data = []
+
+        for photo in self.sec_index.values():
+            json_data.append({
+                'id': photo._id,
+                'timestamp': photo._timestamp,
+                'path': photo._path,
+                'tags': photo._tags,
+                'rating': photo._rating
+            })
+
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(json_data, f)
 
     def load(self, path):
-        ...
+        path += '.json' if not path.endswith('.json') else ''
+
+        with open(path, 'r', encoding='utf-8') as f:
+            json_data = json.load(f)
+
+        self.reset()
+        
+        for data in json_data:
+            photo = Photo(
+                id=self.gerenate_id(),
+                timestamp=int(data['timestamp']),
+                path=data['path'],
+                tags=data.get('tags', []),
+                rating=data.get('rating', 1)
+            )
+            self.insert(photo)
+            self.sec_index[photo._id] = photo
+
+    def import_photos(self, path):
+        path += '.json' if not path.endswith('.json') else ''
+
+        with open(path, 'r', encoding='utf-8') as f:
+            json_data = json.load(f)
+        
+        for data in json_data:
+            if data['ts'] is None or not isinstance(data['ts'], int) or data['path'] is None:
+                continue
+            else:
+                photo = Photo(
+                    id=self.gerenate_id(),
+                    timestamp=int(data['ts']),
+                    path=data['path'],
+                    tags=data.get('tags', []),
+                    rating=data.get('rating', 1)
+                )
+                self.insert(photo)
+                self.sec_index[photo._id] = photo
 
     def list(self):
         result = super().in_order() 
@@ -134,22 +200,22 @@ class Catalog(PhotoAVL):
     def registerCommands(self):
         self.commands = [
             {'command': ':add', 'option': '<ts> <path> [rating]', 'function': self.add},
-            {'command': ':import', 'option': '<manifest.json>', 'function': None},
+            {'command': ':import', 'option': '<manifest.json>', 'function': self.import_photos},
             {'command': ':range', 'option': '<ts1> <ts2>', 'function': self.range},
             {'command': ':nearest', 'option': '<ts>', 'function': super().nearest},
             {'command': ':next', 'option': ' <id>', 'function': self.next_of},
             {'command': ':prev', 'option': ' <id>', 'function': self.prev_of},
-            {'command': ':get', 'option': '<id>', 'function': None},
-            {'command': ':tag', 'option': '<id> <tag>', 'function': None},
-            {'command': ':rate', 'option': '<id> <0..5>', 'function': None},
-            {'command': ':find-tag', 'option': '<tag>', 'function': None},
+            {'command': ':get', 'option': '<id>', 'function': lambda id: self.get_by_id(id, print_result=True)},
+            {'command': ':tag', 'option': '<id> <tag>', 'function': self.tag},
+            {'command': ':rate', 'option': '<id> <1..5>', 'function': self.rate},
+            {'command': ':find-tag', 'option': '<tag>', 'function': self.find_by_tag},
             {'command': ':remove', 'option': '<id>', 'function': self.remove},
             {'command': ':remove-range', 'option': '<ts1> <ts2>', 'function': self.remove_range},
             {'command': ':stats', 'option': None, 'function': self.stats},
             {'command': ':list', 'option': None, 'function': self.list},
             {'command': ':tree', 'option': None, 'function': super().print_tree},
-            {'command': ':save', 'option': '<f>', 'function': None},
-            {'command': ':load', 'option': '<f>', 'function': None},
+            {'command': ':save', 'option': '<f>', 'function': self.save},
+            {'command': ':load', 'option': '<f>', 'function': self.load},
             {'command': ':help', 'option': None, 'function': self.help},
             {'command': ':quit', 'option': None, 'function': self.quit},
         ]

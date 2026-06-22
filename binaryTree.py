@@ -380,3 +380,6 @@ class BinaryTree(TreeADT):
                     stack.append(result[-1].right_node())
         return result
 
+    def reset(self):
+        self._root = None
+        self._qtd_nodes = 0

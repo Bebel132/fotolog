@@ -3,13 +3,6 @@ from catalog import Catalog
 from photo import Photo
 fotolog = Catalog()
 
-fotolog.add(['1000', 'path/to/photo1.jpg', '5'])
-fotolog.add(['2000', 'path/to/photo2.jpg', '4'])
-fotolog.add(['1500', 'path/to/photo3.jpg', '3'])
-fotolog.add(['2500', 'path/to/photo4.jpg', '5'])
-fotolog.add(['1200', 'path/to/photo5.jpg', '2'])
-fotolog.add(['1800', 'path/to/photo6.jpg', '4'])
-
 def run():
     fotolog.registerCommands()
     while fotolog.running:
