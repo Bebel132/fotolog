@@ -1,6 +1,6 @@
 # Fotolog AVL
 
-Projeto desenvolvido para a disciplina de Estrutura de Dados utilizando uma Árvore AVL como índice principal para armazenamento e recuperação de fotografias.
+Projeto desenvolvido para a disciplina de Estrutura de Dados utilizando uma Árvore AVL como índice principal para armazenamento e recuperação de _supostas_ fotografias.
 
 
 
